@@ -16,3 +16,9 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+// Unidades.
+$router->get('/units', 'UnitController@index');
+$router->post('/units', 'UnitController@store');
+$router->put('/units/{id}', 'UnitController@update');
+$router->delete('/units/{id}', 'UnitController@delete');
