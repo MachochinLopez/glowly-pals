@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-class CreateTableViewnames extends Migration
+class CreateProductsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateTableViewnames extends Migration
      */
     public function up()
     {
-        Schema::create('table_viewnames', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('permission_id');
-            $table->string('name');
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('unit_id');
             $table->string('description');
             $table->timestamps();
         });
@@ -29,6 +28,6 @@ class CreateTableViewnames extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('table_viewnames');
+        Schema::dropIfExists('products');
     }
 }
