@@ -22,3 +22,9 @@ $router->get('/units', 'UnitController@index');
 $router->post('/units', 'UnitController@store');
 $router->put('/units/{id}', 'UnitController@update');
 $router->delete('/units/{id}', 'UnitController@delete');
+
+// Productos
+$router->get('/products', 'ProductController@index');
+$router->post('/products', 'ProductController@store');
+$router->put('/products/{id}', 'ProductController@update');
+$router->delete('/products/{id}', 'ProductController@delete');

@@ -3,27 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Validator;
-use App\Models\Unit;
+use App\Models\Product;
 
-class UnitController extends Controller
+class ProductController extends Controller
 {
-	protected $modelName = 'Unidad';
+	protected $modelName = 'Producto';
 
 	/**
-	 * Devuelve la lista de todas las unidades.
+	 * Devuelve la lista de todas las productos.
 	 * 
 	 * @return json
 	 */
 	public function index()
 	{
-		$units = Unit::all();
+		$products = Product::all();
 		return response()->json([
-			'data' => $units,
+			'data' => $products,
 		]);
 	}
 
 	/**
-	 * Crea una nueva unidad.
+	 * Crea una nueva producto.
 	 * 
 	 * @return json
 	 */
@@ -35,16 +35,16 @@ class UnitController extends Controller
 		if ($validatedData['state'] == 'success') {
 			$responseData = [
 				'state' => $validatedData['state'],
-				'message' => __('validation.success_messages.femenine.create', ['modelName' => $this->modelName]),
-				// Crea la unidad.
-				'data' => Unit::create(request()->all()),
+				'message' => __('validation.success_messages.masculine.create', ['modelName' => $this->modelName]),
+				// Crea la producto.
+				'data' => Product::create(request()->all()),
 			];
 		}
 		// Si no...
 		else {
 			$responseData = [
 				'state' => $validatedData['state'],
-				// Crea la unidad.
+				// Crea la producto.
 				'errors' => $validatedData['errors'],
 			];
 		}
@@ -53,35 +53,36 @@ class UnitController extends Controller
 	}
 
 	/**
-	 * Actualiza una unidad existente.
+	 * Actualiza una producto existente.
 	 * 
-	 * @param int $id Unit Id
+	 * @param int $id Product Id
 	 * @return json
 	 */
 	public function update($id)
 	{
-		$unit = Unit::find($id);
+		$product = Product::find($id);
 
-		// Si la unidad existe...
-		if ($unit) {
+		// Si la producto existe...
+		if ($product) {
 			$validatedData = $this->validateRequest();
 
 			// Si pasa la validación...
 			if ($validatedData['state'] == 'success') {
 				// Actualiza el registro.
-				$unit->update(request()->all());
+				$product->update(request()->all());
 
 				$responseData = [
 					'state' => $validatedData['state'],
-					'message' => __('validation.success_messages.femenine.edit', ['modelName' => $this->modelName]),
-					'data' => $unit,
+					'message' => __('validation.success_messages.masculine.edit', ['modelName' => $this->modelName]),
+					// Crea la producto.
+					'data' => $product,
 				];
 			}
 			// Si no...
 			else {
 				$responseData = [
 					'state' => $validatedData['state'],
-					// Crea la unidad.
+					// Crea la producto.
 					'errors' => $validatedData['errors'],
 				];
 			}
@@ -90,9 +91,9 @@ class UnitController extends Controller
 		else {
 			$responseData = [
 				'state' => 'error',
-				// Crea la unidad.
+				// Crea la producto.
 				'errors' => [
-					__('validation.exists', ['modelName' => $this->modelName])
+					__('validation.exists', ['modelName' => 'Producto'])
 				],
 			];
 		}
@@ -101,32 +102,32 @@ class UnitController extends Controller
 	}
 
 	/**
-	 * Actualiza una unidad existente.
+	 * Actualiza una producto existente.
 	 * 
-	 * @param int $id Unit Id
+	 * @param int $id Product Id
 	 * @return json
 	 */
 	public function delete($id)
 	{
-		$unit = Unit::find($id);
+		$product = Product::find($id);
 
-		// Si existe la unidad...
-		if ($unit) {
+		// Si existe la producto...
+		if ($product) {
 			// La elimina.
-			$unit->delete();
+			$product->delete();
 
 			$responseData = [
 				'state' => 'success',
-				'message' => __('validation.success_messages.femenine.delete', ['modelName' => $this->modelName])
+				'message' => __('validation.success_messages.masculine.delete', ['modelName' => $this->modelName]),
 			];
 		}
 		// Si no...
 		else {
 			$responseData = [
 				'state' => 'error',
-				// Crea la unidad.
+				// Crea la producto.
 				'errors' => [
-					__('validation.exists', ['modelName' => $this->modelName])
+					__('validation.exists', ['modelName' => 'Producto'])
 				],
 			];
 		}
@@ -145,11 +146,16 @@ class UnitController extends Controller
 		// Reglas de validación.
 		$rules = [
 			'description' => 'required',
-			'short_name' => 'required',
+			'unit_id' => 'required|exists:units,id',
+		];
+
+		$messages = [
+			'required' => __('validation.required'),
+			'exists' => __('validation.exists', ['modelName' => 'Unidad'])
 		];
 
 		// Validador del request.
-		$validator = Validator::make(request()->all(), $rules);
+		$validator = Validator::make(request()->all(), $rules, $messages);
 		// Estado de la validación.
 		$state = $validator->fails() ? 'error' : 'success';
 		// Mensajes de error.
