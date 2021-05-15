@@ -19,12 +19,14 @@ $router->get('/', function () use ($router) {
 
 // Unidades.
 $router->get('/units', 'UnitController@index');
+$router->get('/units/{id}', 'UnitController@show');
 $router->post('/units', 'UnitController@store');
 $router->put('/units/{id}', 'UnitController@update');
 $router->delete('/units/{id}', 'UnitController@delete');
 
 // Productos
 $router->get('/products', 'ProductController@index');
+$router->get('/products/{id}', 'ProductController@show');
 $router->post('/products', 'ProductController@store');
 $router->put('/products/{id}', 'ProductController@update');
 $router->delete('/products/{id}', 'ProductController@delete');

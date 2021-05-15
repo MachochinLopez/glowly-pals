@@ -23,6 +23,36 @@ class UnitController extends Controller
 	}
 
 	/**
+	 * Muestra el detalle individual de una unidad.
+	 * 
+	 * @param int $id Unit Id
+	 * @return json
+	 */
+	public function show($id)
+	{
+		$unit = Unit::find($id);
+
+		// Si la unidad existe...
+		if ($unit) {
+			$responseData = [
+				'state' => 'success',
+				'data' => $unit,
+			];
+		}
+		// Si no...
+		else {
+			$responseData = [
+				'state' => 'error',
+				'errors' => [
+					__('validation.exists', ['modelName' => $this->modelName])
+				],
+			];
+		}
+
+		return response()->json($responseData);
+	}
+
+	/**
 	 * Crea una nueva unidad.
 	 * 
 	 * @return json
@@ -44,7 +74,6 @@ class UnitController extends Controller
 		else {
 			$responseData = [
 				'state' => $validatedData['state'],
-				// Crea la unidad.
 				'errors' => $validatedData['errors'],
 			];
 		}

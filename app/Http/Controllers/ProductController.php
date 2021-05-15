@@ -23,6 +23,36 @@ class ProductController extends Controller
 	}
 
 	/**
+	 * Muestra el detalle individual de un producto.
+	 * 
+	 * @param int $id Product Id
+	 * @return json
+	 */
+	public function show($id)
+	{
+		$product = Product::find($id);
+
+		// Si la unidad existe...
+		if ($product) {
+			$responseData = [
+				'state' => 'success',
+				'data' => $product,
+			];
+		}
+		// Si no...
+		else {
+			$responseData = [
+				'state' => 'error',
+				'errors' => [
+					__('validation.exists', ['modelName' => $this->modelName])
+				],
+			];
+		}
+
+		return response()->json($responseData);
+	}
+
+	/**
 	 * Crea una nueva producto.
 	 * 
 	 * @return json
