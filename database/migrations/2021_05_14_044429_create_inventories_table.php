@@ -16,6 +16,7 @@ class CreateInventoriesTable extends Migration
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id');
+            $table->foreignId('deposit_id');
             $table->string('description');
             $table->timestamps();
         });

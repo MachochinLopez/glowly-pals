@@ -16,6 +16,7 @@ class CreateDepositsTable extends Migration
         Schema::create('deposits', function (Blueprint $table) {
             $table->id();
             $table->string('description');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }

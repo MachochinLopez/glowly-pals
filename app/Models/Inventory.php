@@ -1,12 +1,14 @@
-<?php   
+<?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Inventory extends Model{
-    protected $table = "inventories";
-
-    // protected $fillable = [];
-
-    // public $timestamps = false;
+class Inventory extends Model
+{
+    protected $fillable = [
+        'product_id',
+        'deposit_id',
+        'quantity'
+    ];
 }
