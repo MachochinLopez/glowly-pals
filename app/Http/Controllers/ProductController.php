@@ -43,8 +43,12 @@ class ProductController extends Controller
 		else {
 			$responseData = [
 				'state' => 'error',
+				// Devuelve los errores de validación..
 				'errors' => [
-					__('validation.exists', ['modelName' => $this->modelName])
+					__(
+						'validation.exists',
+						['attribute' => $this->modelName]
+					)
 				],
 			];
 		}
@@ -53,7 +57,7 @@ class ProductController extends Controller
 	}
 
 	/**
-	 * Crea una nueva producto.
+	 * Crea un nuevo producto.
 	 * 
 	 * @return json
 	 */
@@ -65,7 +69,10 @@ class ProductController extends Controller
 		if ($validatedData['state'] == 'success') {
 			$responseData = [
 				'state' => $validatedData['state'],
-				'message' => __('validation.success_messages.masculine.create', ['modelName' => $this->modelName]),
+				'message' => __(
+					'validation.success_messages.masculine.create',
+					['attribute' => $this->modelName]
+				),
 				// Crea la producto.
 				'data' => Product::create(request()->all()),
 			];
@@ -74,7 +81,7 @@ class ProductController extends Controller
 		else {
 			$responseData = [
 				'state' => $validatedData['state'],
-				// Crea la producto.
+				// Devuelve los errores de validación..
 				'errors' => $validatedData['errors'],
 			];
 		}
@@ -83,7 +90,7 @@ class ProductController extends Controller
 	}
 
 	/**
-	 * Actualiza una producto existente.
+	 * Actualiza un producto existente.
 	 * 
 	 * @param int $id Product Id
 	 * @return json
@@ -103,7 +110,10 @@ class ProductController extends Controller
 
 				$responseData = [
 					'state' => $validatedData['state'],
-					'message' => __('validation.success_messages.masculine.edit', ['modelName' => $this->modelName]),
+					'message' => __(
+						'validation.success_messages.masculine.edit',
+						['attribute' => $this->modelName]
+					),
 					// Crea la producto.
 					'data' => $product,
 				];
@@ -112,7 +122,7 @@ class ProductController extends Controller
 			else {
 				$responseData = [
 					'state' => $validatedData['state'],
-					// Crea la producto.
+					// Devuelve los errores de validación..
 					'errors' => $validatedData['errors'],
 				];
 			}
@@ -121,9 +131,12 @@ class ProductController extends Controller
 		else {
 			$responseData = [
 				'state' => 'error',
-				// Crea la producto.
+				// Devuelve los errores de validación..
 				'errors' => [
-					__('validation.exists', ['modelName' => 'Producto'])
+					__(
+						'validation.exists',
+						['attribute' => $this->modelName]
+					)
 				],
 			];
 		}
@@ -132,7 +145,7 @@ class ProductController extends Controller
 	}
 
 	/**
-	 * Actualiza una producto existente.
+	 * Elimina un producto.
 	 * 
 	 * @param int $id Product Id
 	 * @return json
@@ -148,16 +161,22 @@ class ProductController extends Controller
 
 			$responseData = [
 				'state' => 'success',
-				'message' => __('validation.success_messages.masculine.delete', ['modelName' => $this->modelName]),
+				'message' => __(
+					'validation.success_messages.masculine.delete',
+					['attribute' => $this->modelName]
+				),
 			];
 		}
 		// Si no...
 		else {
 			$responseData = [
 				'state' => 'error',
-				// Crea la producto.
+				// Devuelve los errores de validación..
 				'errors' => [
-					__('validation.exists', ['modelName' => 'Producto'])
+					__(
+						'validation.exists',
+						['attribute' => $this->modelName]
+					)
 				],
 			];
 		}
@@ -179,13 +198,8 @@ class ProductController extends Controller
 			'unit_id' => 'required|exists:units,id',
 		];
 
-		$messages = [
-			'required' => __('validation.required'),
-			'exists' => __('validation.exists', ['modelName' => 'Unidad'])
-		];
-
 		// Validador del request.
-		$validator = Validator::make(request()->all(), $rules, $messages);
+		$validator = Validator::make(request()->all(), $rules);
 		// Estado de la validación.
 		$state = $validator->fails() ? 'error' : 'success';
 		// Mensajes de error.

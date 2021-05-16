@@ -45,7 +45,10 @@ class InventoryController extends Controller
             $responseData = [
                 'state' => 'error',
                 'errors' => [
-                    __('validation.exists', ['modelName' => $this->modelName])
+                    __(
+                        'validation.exists',
+                        ['modelName' => $this->modelName]
+                    )
                 ],
             ];
         }
@@ -54,28 +57,53 @@ class InventoryController extends Controller
     }
 
     /**
-     * Crea una nueva Inventario.
+     * Maneja las entradas de Inventario.
      * 
      * @return json
      */
-    public function store()
+    public function handleInventoryEntry()
     {
         $validatedData = $this->validateRequest();
 
         // Si pasa la validación...
         if ($validatedData['state'] == 'success') {
+
+            $inventory = Inventory::where([
+                ['deposit_id', request()->deposit_id],
+                ['product_id', request()->product_id],
+            ])->first();
+
+            // Y no se ha creado un inventario para ese mismo depósito
+            // ni ese mismo producto...
+            if (!$inventory) {
+                // Lo crea.
+                $inventory = Inventory::create(request()->all());
+            }
+            // Si sí...
+            else {
+                // Toma la cantidad anterior de inventario.
+                $previousAmount = $inventory->quantity;
+                // La suma.
+                $newAmount = $previousAmount + request()->quantity;
+                // Y lo actualiza.
+                $inventory->update([
+                    'quantity' => $newAmount
+                ]);
+            }
+
+            // Forma la respuesta.
             $responseData = [
                 'state' => $validatedData['state'],
-                'message' => __('validation.success_messages.masculine.create', ['modelName' => $this->modelName]),
-                // Crea la Inventario.
-                'data' => Inventory::create(request()->all()),
+                'message' => __('validation.entry'),
+                'data' => $inventory,
             ];
         }
         // Si no...
         else {
+            // Forma la respuesta.
             $responseData = [
                 'state' => $validatedData['state'],
-                // Crea la Inventario.
+                // Devuelve los errores de validación..
                 'errors' => $validatedData['errors'],
             ];
         }
@@ -84,82 +112,62 @@ class InventoryController extends Controller
     }
 
     /**
-     * Actualiza una Inventario existente.
+     * Maneja las salidas de Inventario.
      * 
-     * @param int $id Product Id
      * @return json
      */
-    public function update($id)
+    public function handleInventoryExit()
     {
-        $inventory = Inventory::find($id);
+        $validatedData = $this->validateRequest();
 
-        // Si la Inventario existe...
-        if ($inventory) {
-            $validatedData = $this->validateRequest();
+        // Si pasa la validación...
+        if ($validatedData['state'] == 'success') {
 
-            // Si pasa la validación...
-            if ($validatedData['state'] == 'success') {
-                // Actualiza el registro.
-                $inventory->update(request()->all());
+            $inventory = Inventory::where([
+                ['deposit_id', request()->deposit_id],
+                ['product_id', request()->product_id],
+            ])->first();
 
+            // Toma la cantidad anterior de inventario.
+            $previousAmount = $inventory->quantity;
+            // La resta.
+            $newAmount = $previousAmount - request()->quantity;
+
+            // Si la nueva cantidad de producto es menor a 0.
+            if ($newAmount < 0) {
+                // Marca el error.
                 $responseData = [
-                    'state' => $validatedData['state'],
-                    'message' => __('validation.success_messages.masculine.edit', ['modelName' => $this->modelName]),
-                    // Crea la Inventario.
-                    'data' => $inventory,
+                    'state' => 'error',
+                    'errors' => [
+                        __(
+                            'validation.min_amount_error',
+                            ['current_amount' => $previousAmount]
+                        )
+                    ],
                 ];
             }
             // Si no...
             else {
+                // Y lo actualiza.
+                $inventory->update([
+                    'quantity' => $newAmount
+                ]);
+
+                // Forma la respuesta exitosa.
                 $responseData = [
                     'state' => $validatedData['state'],
-                    // Crea la Inventario.
-                    'errors' => $validatedData['errors'],
+                    'message' => __('validation.exit'),
+                    'data' => $inventory,
                 ];
             }
         }
         // Si no...
         else {
+            // Forma la respuesta.
             $responseData = [
-                'state' => 'error',
-                // Crea la Inventario.
-                'errors' => [
-                    __('validation.exists', ['modelName' => 'Inventario'])
-                ],
-            ];
-        }
-
-        return response()->json($responseData);
-    }
-
-    /**
-     * Actualiza una Inventario existente.
-     * 
-     * @param int $id Product Id
-     * @return json
-     */
-    public function delete($id)
-    {
-        $inventory = Inventory::find($id);
-
-        // Si existe la Inventario...
-        if ($inventory) {
-            // La elimina.
-            $inventory->delete();
-
-            $responseData = [
-                'state' => 'success',
-                'message' => __('validation.success_messages.masculine.delete', ['modelName' => $this->modelName]),
-            ];
-        }
-        // Si no...
-        else {
-            $responseData = [
-                'state' => 'error',
-                // Crea la Inventario.
-                'errors' => [
-                    __('validation.exists', ['modelName' => 'Inventario'])
-                ],
+                'state' => $validatedData['state'],
+                // Devuelve los errores de validación..
+                'errors' => $validatedData['errors'],
             ];
         }
 
@@ -176,17 +184,13 @@ class InventoryController extends Controller
     {
         // Reglas de validación.
         $rules = [
-            'description' => 'required',
-            'unit_id' => 'required|exists:units,id',
-        ];
-
-        $messages = [
-            'required' => __('validation.required'),
-            'exists' => __('validation.exists', ['modelName' => 'Unidad'])
+            'quantity' => 'required|integer|min:1',
+            'deposit_id' => 'required|exists:deposits,id',
+            'product_id' => 'required|exists:products,id',
         ];
 
         // Validador del request.
-        $validator = Validator::make(request()->all(), $rules, $messages);
+        $validator = Validator::make(request()->all(), $rules);
         // Estado de la validación.
         $state = $validator->fails() ? 'error' : 'success';
         // Mensajes de error.

@@ -17,7 +17,7 @@ class CreateInventoriesTable extends Migration
             $table->id();
             $table->foreignId('product_id');
             $table->foreignId('deposit_id');
-            $table->string('description');
+            $table->integer('quantity');
             $table->timestamps();
         });
     }

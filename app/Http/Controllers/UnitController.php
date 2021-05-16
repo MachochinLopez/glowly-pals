@@ -43,8 +43,12 @@ class UnitController extends Controller
 		else {
 			$responseData = [
 				'state' => 'error',
+				// Devuelve los errores de validación..
 				'errors' => [
-					__('validation.exists', ['modelName' => $this->modelName])
+					__(
+						'validation.exists',
+						['attribute' => $this->modelName]
+					)
 				],
 			];
 		}
@@ -65,7 +69,10 @@ class UnitController extends Controller
 		if ($validatedData['state'] == 'success') {
 			$responseData = [
 				'state' => $validatedData['state'],
-				'message' => __('validation.success_messages.femenine.create', ['modelName' => $this->modelName]),
+				'message' => __(
+					'validation.success_messages.femenine.create',
+					['attribute' => $this->modelName]
+				),
 				// Crea la unidad.
 				'data' => Unit::create(request()->all()),
 			];
@@ -74,6 +81,7 @@ class UnitController extends Controller
 		else {
 			$responseData = [
 				'state' => $validatedData['state'],
+				// Devuelve los errores de validación..
 				'errors' => $validatedData['errors'],
 			];
 		}
@@ -102,7 +110,10 @@ class UnitController extends Controller
 
 				$responseData = [
 					'state' => $validatedData['state'],
-					'message' => __('validation.success_messages.femenine.edit', ['modelName' => $this->modelName]),
+					'message' => __(
+						'validation.success_messages.femenine.edit',
+						['attribute' => $this->modelName]
+					),
 					'data' => $unit,
 				];
 			}
@@ -110,7 +121,7 @@ class UnitController extends Controller
 			else {
 				$responseData = [
 					'state' => $validatedData['state'],
-					// Crea la unidad.
+					// Devuelve los errores de validación..
 					'errors' => $validatedData['errors'],
 				];
 			}
@@ -119,9 +130,12 @@ class UnitController extends Controller
 		else {
 			$responseData = [
 				'state' => 'error',
-				// Crea la unidad.
+				// Devuelve los errores de validación..
 				'errors' => [
-					__('validation.exists', ['modelName' => $this->modelName])
+					__(
+						'validation.exists',
+						['attribute' => $this->modelName]
+					)
 				],
 			];
 		}
@@ -130,7 +144,7 @@ class UnitController extends Controller
 	}
 
 	/**
-	 * Actualiza una unidad existente.
+	 * Elimina una unidad.
 	 * 
 	 * @param int $id Unit Id
 	 * @return json
@@ -146,16 +160,22 @@ class UnitController extends Controller
 
 			$responseData = [
 				'state' => 'success',
-				'message' => __('validation.success_messages.femenine.delete', ['modelName' => $this->modelName])
+				'message' => __(
+					'validation.success_messages.femenine.delete',
+					['attribute' => $this->modelName]
+				)
 			];
 		}
 		// Si no...
 		else {
 			$responseData = [
 				'state' => 'error',
-				// Crea la unidad.
+				// Devuelve los errores de validación..
 				'errors' => [
-					__('validation.exists', ['modelName' => $this->modelName])
+					__(
+						'validation.exists',
+						['attribute' => $this->modelName]
+					)
 				],
 			];
 		}

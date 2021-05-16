@@ -30,3 +30,8 @@ $router->get('/products/{id}', 'ProductController@show');
 $router->post('/products', 'ProductController@store');
 $router->put('/products/{id}', 'ProductController@update');
 $router->delete('/products/{id}', 'ProductController@delete');
+
+// Inventarios
+$router->get('/inventories', 'InventoryController@index');
+$router->post('/add-entry', 'InventoryController@handleInventoryEntry');
+$router->post('/add-exit', 'InventoryController@handleInventoryExit');
