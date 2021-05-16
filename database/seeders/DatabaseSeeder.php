@@ -17,6 +17,8 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             DepositsTableSeeder::class,
             UnitsTableSeeder::class,
+            ProductsTableSeeder::class,
+            InventoriesTableSeeder::class,
         ]);
     }
 }
