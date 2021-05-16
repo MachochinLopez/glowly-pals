@@ -10,7 +10,7 @@ class ProductController extends Controller
 	protected $modelName = 'Producto';
 
 	/**
-	 * Devuelve la lista de todas las productos.
+	 * Devuelve la lista de todos los productos.
 	 * 
 	 * @return json
 	 */
@@ -32,7 +32,7 @@ class ProductController extends Controller
 	{
 		$product = Product::find($id);
 
-		// Si la unidad existe...
+		// Si el producto existe...
 		if ($product) {
 			// Da formato al producto.
 			$formattedProduct = [
@@ -82,7 +82,7 @@ class ProductController extends Controller
 					'validation.success_messages.masculine.create',
 					['modelName' => $this->modelName]
 				),
-				// Crea la producto.
+				// Crea el producto.
 				'data' => Product::create(request()->all()),
 			];
 		}
@@ -108,7 +108,7 @@ class ProductController extends Controller
 	{
 		$product = Product::find($id);
 
-		// Si la producto existe...
+		// Si el producto existe...
 		if ($product) {
 			$validatedData = $this->validateRequest();
 
@@ -123,7 +123,7 @@ class ProductController extends Controller
 						'validation.success_messages.masculine.edit',
 						['modelName' => $this->modelName]
 					),
-					// Crea la producto.
+					// Crea el producto.
 					'data' => $product,
 				];
 			}
@@ -163,7 +163,7 @@ class ProductController extends Controller
 	{
 		$product = Product::find($id);
 
-		// Si existe la producto...
+		// Si existe el producto...
 		if ($product) {
 			// La elimina.
 			$product->delete();
