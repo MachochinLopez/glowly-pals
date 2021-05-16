@@ -25,4 +25,15 @@ class Product extends Model
     {
         return $this->hasMany(Inventory::class);
     }
+
+    /**
+     * Relación a unidades. Devuelve la unidad con la
+     * que este producto se relaciona.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function unit()
+    {
+        return $this->belongsTo(Unit::class);
+    }
 }

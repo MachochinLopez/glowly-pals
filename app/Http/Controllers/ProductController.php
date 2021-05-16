@@ -34,9 +34,18 @@ class ProductController extends Controller
 
 		// Si la unidad existe...
 		if ($product) {
+			// Da formato al producto.
+			$formattedProduct = [
+				'unit_id' => $product->unit->id,
+				'unit_description' => $product->unit->description,
+				'unit_short_name' => $product->unit->short_name,
+				'product_id' => $product->id,
+				'product_description' => $product->description,
+			];
+
 			$responseData = [
 				'state' => 'success',
-				'data' => $product,
+				'data' => $formattedProduct,
 			];
 		}
 		// Si no...
