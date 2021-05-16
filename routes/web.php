@@ -36,3 +36,10 @@ $router->get('/inventories', 'InventoryController@index');
 $router->get('/inventories/{productId}', 'InventoryController@show');
 $router->post('/add-entry', 'InventoryController@handleInventoryEntry');
 $router->post('/add-exit', 'InventoryController@handleInventoryExit');
+
+// Depósitos
+$router->get('/deposits', 'DepositController@index');
+$router->get('/deposits/{id}', 'DepositController@show');
+$router->post('/deposits', 'DepositController@store');
+$router->put('/deposits/{id}', 'DepositController@update');
+$router->delete('/deposits/{id}', 'DepositController@delete');

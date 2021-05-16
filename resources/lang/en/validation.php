@@ -12,6 +12,7 @@ return [
 		'description' => 'Descripción',
 		'short_name' => 'Abreviatura',
 		'unit_id' => 'Unidad',
+		'user_id' => 'Usuario',
 		'quantity' => 'Cantidad',
 		'deposit_id' => 'Depósito',
 		'product_id' => 'Producto',

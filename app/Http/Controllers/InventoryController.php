@@ -131,7 +131,7 @@ class InventoryController extends Controller
             $responseData = [
                 'state' => $validatedData['state'],
                 'message' => __('validation.entry'),
-                'data' => $inventory,
+                'data' => $inventory->formatted(),
             ];
         }
         // Si no...
@@ -193,7 +193,7 @@ class InventoryController extends Controller
                 $responseData = [
                     'state' => $validatedData['state'],
                     'message' => __('validation.exit'),
-                    'data' => $inventory,
+                    'data' => $inventory->formatted(),
                 ];
             }
         }

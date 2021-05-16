@@ -16,7 +16,12 @@ class DepositController extends Controller
      */
     public function index()
     {
-        $deposits = Deposit::all();
+        // Busca todos los depósitos.
+        $deposits = Deposit::all()->map(function ($product) {
+            // Y devuelve cada uno con el formato esperado.
+            return $product->formatted();
+        });
+
         return response()->json([
             'data' => $deposits,
         ]);
@@ -35,17 +40,9 @@ class DepositController extends Controller
         // Si el depósito existe...
         if ($deposit) {
             // Da formato al depósito.
-            $formattedProduct = [
-                'unit_id' => $deposit->unit->id,
-                'unit_description' => $deposit->unit->description,
-                'unit_short_name' => $deposit->unit->short_name,
-                'product_id' => $deposit->id,
-                'product_description' => $deposit->description,
-            ];
-
             $responseData = [
                 'state' => 'success',
-                'data' => $formattedProduct,
+                'data' => $deposit->formatted(),
             ];
         }
         // Si no...
@@ -82,8 +79,8 @@ class DepositController extends Controller
                     'validation.success_messages.masculine.create',
                     ['modelName' => $this->modelName]
                 ),
-                // Crea la depósito.
-                'data' => Deposit::create(request()->all()),
+                // Crea el depósito.
+                'data' => Deposit::create(request()->all())->formatted(),
             ];
         }
         // Si no...
@@ -108,7 +105,7 @@ class DepositController extends Controller
     {
         $deposit = Deposit::find($id);
 
-        // Si la depósito existe...
+        // Si el depósito existe...
         if ($deposit) {
             $validatedData = $this->validateRequest();
 
@@ -123,8 +120,8 @@ class DepositController extends Controller
                         'validation.success_messages.masculine.edit',
                         ['modelName' => $this->modelName]
                     ),
-                    // Crea la depósito.
-                    'data' => $deposit,
+                    // Crea el depósito.
+                    'data' => $deposit->formatted(),
                 ];
             }
             // Si no...
@@ -163,7 +160,7 @@ class DepositController extends Controller
     {
         $deposit = Deposit::find($id);
 
-        // Si existe la depósito...
+        // Si existe el depósito...
         if ($deposit) {
             // La elimina.
             $deposit->delete();
@@ -204,7 +201,7 @@ class DepositController extends Controller
         // Reglas de validación.
         $rules = [
             'description' => 'required',
-            'unit_id' => 'required|exists:units,id',
+            'user_id' => 'required|exists:users,id',
         ];
 
         // Validador del request.
