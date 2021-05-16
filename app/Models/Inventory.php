@@ -11,4 +11,30 @@ class Inventory extends Model
         'deposit_id',
         'quantity'
     ];
+
+    /************************
+     * Funciones del modelo *
+     ************************/
+
+    /**
+     * Relación a productos. Devuelve el prodcuto con el 
+     * que este inventario se relaciona.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    /**
+     * Relación a depósitos. Devuelve el prodcuto con el 
+     * que este inventario se relaciona.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function deposit()
+    {
+        return $this->belongsTo(Deposit::class);
+    }
 }

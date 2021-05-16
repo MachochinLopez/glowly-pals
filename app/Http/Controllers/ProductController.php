@@ -71,7 +71,7 @@ class ProductController extends Controller
 				'state' => $validatedData['state'],
 				'message' => __(
 					'validation.success_messages.masculine.create',
-					['attribute' => $this->modelName]
+					['modelName' => $this->modelName]
 				),
 				// Crea la producto.
 				'data' => Product::create(request()->all()),
@@ -112,7 +112,7 @@ class ProductController extends Controller
 					'state' => $validatedData['state'],
 					'message' => __(
 						'validation.success_messages.masculine.edit',
-						['attribute' => $this->modelName]
+						['modelName' => $this->modelName]
 					),
 					// Crea la producto.
 					'data' => $product,
@@ -163,7 +163,7 @@ class ProductController extends Controller
 				'state' => 'success',
 				'message' => __(
 					'validation.success_messages.masculine.delete',
-					['attribute' => $this->modelName]
+					['modelName' => $this->modelName]
 				),
 			];
 		}

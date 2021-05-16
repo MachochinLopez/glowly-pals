@@ -71,7 +71,7 @@ class UnitController extends Controller
 				'state' => $validatedData['state'],
 				'message' => __(
 					'validation.success_messages.femenine.create',
-					['attribute' => $this->modelName]
+					['modelName' => $this->modelName]
 				),
 				// Crea la unidad.
 				'data' => Unit::create(request()->all()),
@@ -112,7 +112,7 @@ class UnitController extends Controller
 					'state' => $validatedData['state'],
 					'message' => __(
 						'validation.success_messages.femenine.edit',
-						['attribute' => $this->modelName]
+						['modelName' => $this->modelName]
 					),
 					'data' => $unit,
 				];
@@ -162,7 +162,7 @@ class UnitController extends Controller
 				'state' => 'success',
 				'message' => __(
 					'validation.success_messages.femenine.delete',
-					['attribute' => $this->modelName]
+					['modelName' => $this->modelName]
 				)
 			];
 		}

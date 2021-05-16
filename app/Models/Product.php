@@ -10,4 +10,19 @@ class Product extends Model
         'description',
         'unit_id'
     ];
+
+    /************************
+     * Funciones del modelo *
+     ************************/
+
+    /**
+     * Relación a inventarios. Devuelve los inventarios con los 
+     * que este producto se relaciona.
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function inventories()
+    {
+        return $this->hasMany(Inventory::class);
+    }
 }

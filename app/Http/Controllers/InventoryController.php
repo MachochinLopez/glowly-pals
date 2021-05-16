@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+
 use App\Models\Inventory;
+use App\Models\Product;
 
 class InventoryController extends Controller
 {
@@ -17,7 +20,16 @@ class InventoryController extends Controller
     public function index()
     {
         // Listamos los inventarios agrupados por producto.
-        $inventories = Inventory::all();
+        $inventories = Inventory::select(
+            'inventories.id AS inventory_id',
+            'inventories.product_id AS product_id',
+            'products.description AS productName',
+            DB::raw('SUM(inventories.quantity) AS quantity')
+        )
+            ->leftJoin('products', 'inventories.product_id', 'products.id')
+            ->groupBy('product_id')
+            ->get();
+
         return response()->json([
             'data' => $inventories,
         ]);
@@ -26,18 +38,42 @@ class InventoryController extends Controller
     /**
      * Muestra el detalle individual de un Inventario.
      * 
-     * @param int $id Product Id
+     * @param int $productId Product Id
      * @return json
      */
-    public function show($id)
+    public function show($productId)
     {
-        $inventory = Inventory::find($id);
+        $product = Product::find($productId);
 
-        // Si la unidad existe...
-        if ($inventory) {
+        // Si el producto existe...
+        if ($product) {
+            // Variabla que contendrá los datos de los
+            // inventarios.
+            $responseData = [];
+            // Toma los inventarios de ese producto.
+            $inventories = $product->inventories;
+
+            // Por cada inventario...
+            foreach ($inventories as $inventory) {
+                $formattedInventory = [
+                    'inventory_id' => $inventory->id,
+                    'deposit_id' => $inventory->deposit->id,
+                    'deposit_name' => $inventory->deposit->description,
+                    'quantity' => $inventory->quantity
+                ];
+
+                $inventoryId = $formattedInventory['inventory_id'];
+                // Agrega el depósito al arreglo de depósitos.
+                $responseData['deposits'][$inventoryId] = $formattedInventory;
+            }
+
+            // Agrega la información del producto.
+            $responseData['product_id'] = $product->id;
+            $responseData['product_name'] = $product->description;
+
             $responseData = [
                 'state' => 'success',
-                'data' => $inventory,
+                'data' => $responseData,
             ];
         }
         // Si no...
@@ -47,7 +83,7 @@ class InventoryController extends Controller
                 'errors' => [
                     __(
                         'validation.exists',
-                        ['modelName' => $this->modelName]
+                        ['attribute' => 'Producto']
                     )
                 ],
             ];

@@ -33,5 +33,6 @@ $router->delete('/products/{id}', 'ProductController@delete');
 
 // Inventarios
 $router->get('/inventories', 'InventoryController@index');
+$router->get('/inventories/{productId}', 'InventoryController@show');
 $router->post('/add-entry', 'InventoryController@handleInventoryEntry');
 $router->post('/add-exit', 'InventoryController@handleInventoryExit');
