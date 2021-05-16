@@ -23,7 +23,7 @@ class InventoryController extends Controller
         $inventories = Inventory::select(
             'inventories.id AS inventory_id',
             'inventories.product_id AS product_id',
-            'products.description AS productName',
+            'products.description AS product_description',
             DB::raw('SUM(inventories.quantity) AS quantity')
         )
             ->leftJoin('products', 'inventories.product_id', 'products.id')
@@ -58,7 +58,7 @@ class InventoryController extends Controller
                 $formattedInventory = [
                     'inventory_id' => $inventory->id,
                     'deposit_id' => $inventory->deposit->id,
-                    'deposit_name' => $inventory->deposit->description,
+                    'deposit_description' => $inventory->deposit->description,
                     'quantity' => $inventory->quantity
                 ];
 
@@ -69,7 +69,7 @@ class InventoryController extends Controller
 
             // Agrega la información del producto.
             $responseData['product_id'] = $product->id;
-            $responseData['product_name'] = $product->description;
+            $responseData['product_description'] = $product->description;
 
             $responseData = [
                 'state' => 'success',
