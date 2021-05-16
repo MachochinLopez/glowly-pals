@@ -16,7 +16,12 @@ class ProductController extends Controller
 	 */
 	public function index()
 	{
-		$products = Product::all();
+		// Toma todos los productos.
+		$products = Product::all()->map(function ($product) {
+			// Y devuelve cada uno con el formato esperado.
+			return $product->formatted();
+		});
+
 		return response()->json([
 			'data' => $products,
 		]);
@@ -34,18 +39,10 @@ class ProductController extends Controller
 
 		// Si el producto existe...
 		if ($product) {
-			// Da formato al producto.
-			$formattedProduct = [
-				'unit_id' => $product->unit->id,
-				'unit_description' => $product->unit->description,
-				'unit_short_name' => $product->unit->short_name,
-				'product_id' => $product->id,
-				'product_description' => $product->description,
-			];
-
+			// Forma el contenido de la respuesta.
 			$responseData = [
 				'state' => 'success',
-				'data' => $formattedProduct,
+				'data' => $product->formatted(),
 			];
 		}
 		// Si no...
@@ -83,7 +80,7 @@ class ProductController extends Controller
 					['modelName' => $this->modelName]
 				),
 				// Crea el producto.
-				'data' => Product::create(request()->all()),
+				'data' => Product::create(request()->all())->formatted(),
 			];
 		}
 		// Si no...
@@ -124,7 +121,7 @@ class ProductController extends Controller
 						['modelName' => $this->modelName]
 					),
 					// Crea el producto.
-					'data' => $product,
+					'data' => $product->formatted(),
 				];
 			}
 			// Si no...
