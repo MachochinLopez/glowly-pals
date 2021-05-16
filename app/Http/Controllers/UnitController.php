@@ -16,7 +16,12 @@ class UnitController extends Controller
 	 */
 	public function index()
 	{
-		$units = Unit::all();
+		// Busca todas las unidades.
+		$units = Unit::all()->map(function ($unit) {
+			// Y devuelve cada uno con el formato esperado.
+			return $unit->formatted();
+		});
+
 		return response()->json([
 			'data' => $units,
 		]);
@@ -36,7 +41,7 @@ class UnitController extends Controller
 		if ($unit) {
 			$responseData = [
 				'state' => 'success',
-				'data' => $unit,
+				'data' => $unit->formatted(),
 			];
 		}
 		// Si no...
@@ -74,7 +79,7 @@ class UnitController extends Controller
 					['modelName' => $this->modelName]
 				),
 				// Crea la unidad.
-				'data' => Unit::create(request()->all()),
+				'data' => Unit::create(request()->all())->formatted()
 			];
 		}
 		// Si no...
@@ -114,7 +119,7 @@ class UnitController extends Controller
 						'validation.success_messages.femenine.edit',
 						['modelName' => $this->modelName]
 					),
-					'data' => $unit,
+					'data' => $unit->formatted(),
 				];
 			}
 			// Si no...
