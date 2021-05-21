@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Deposit;
+use App\Models\Inventory;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Product;
 
@@ -73,6 +75,21 @@ class ProductController extends Controller
 
 		// Si pasa la validación...
 		if ($validatedData['state'] == 'success') {
+			// Crea el producto.
+			$product = Product::create(request()->all())->formatted();
+			$deposits = Deposit::all();
+
+			// Por cada depósito.
+			foreach ($deposits as $deposit) {
+				// Crea un inventario.
+				Inventory::create([
+					'product_id' => $product["product_id"],
+					'deposit_id' => $deposit->id,
+					'quantity' => 0
+				]);
+			}
+
+			// Forma la respuesta.
 			$responseData = [
 				'state' => $validatedData['state'],
 				'message' => __(
@@ -80,7 +97,7 @@ class ProductController extends Controller
 					['modelName' => $this->modelName]
 				),
 				// Crea el producto.
-				'data' => Product::create(request()->all())->formatted(),
+				'data' => $product,
 			];
 		}
 		// Si no...

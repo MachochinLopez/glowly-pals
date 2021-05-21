@@ -28,7 +28,11 @@ class InventoryController extends Controller
         )
             ->leftJoin('products', 'inventories.product_id', 'products.id')
             ->groupBy('product_id')
-            ->get();
+            ->get()
+            ->map(function ($inventory) {
+                // Y devuelve cada uno con el formato esperado.
+                return $inventory->formatted();
+            });
 
         return response()->json([
             'data' => $inventories,
